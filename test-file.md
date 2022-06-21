@@ -18,8 +18,7 @@ $$
 
 
 
-```js
-// here's some heavily customized syntax highlighting
+```typescript
 const loremFetcher = async (id: string) => {
   const ipsum = await fetch(`.../${id}`);
   const text = await ipsum.text();

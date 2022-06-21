@@ -4,3 +4,8 @@ cmd/*/*
 */cmd/*/*
 !*/cmd/*/*.go
 .scratch
+.env
+!.env.example
+main
+!main.go
+main.zip
