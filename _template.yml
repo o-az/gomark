@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  gomark:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: main
+      Runtime: go1.x
+      CodeUri: .
+      Description: ""
+      MemorySize: 512
+      Timeout: 15
+      Role: "$AWS_LAMBDA_FUNCTION_ROLE"

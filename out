@@ -1,0 +1,1 @@
+{"statusCode":400,"headers":{},"multiValueHeaders":{},"body":"Must either be GET or POST. Need 'text' query param in GET or body in POST"}
