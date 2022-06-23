@@ -8,13 +8,13 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	var compiledMarkdown string
 
-	if request.HTTPMethod == "GET" {
+	if request.RequestContext.HTTP.Method == "GET" {
 		text := request.QueryStringParameters["text"]
 		if len(text) == 0 {
-			return events.APIGatewayProxyResponse{
+			return events.APIGatewayV2HTTPResponse{
 				StatusCode:        400,
 				Headers:           map[string]string{},
 				MultiValueHeaders: map[string][]string{},
@@ -25,7 +25,7 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 		decoded, err := base64.StdEncoding.DecodeString(text)
 		compiledMarkdown = string(decoded)
 		if err != nil {
-			return events.APIGatewayProxyResponse{
+			return events.APIGatewayV2HTTPResponse{
 				StatusCode:        400,
 				Headers:           map[string]string{},
 				MultiValueHeaders: map[string][]string{},
@@ -33,7 +33,7 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 				IsBase64Encoded:   false,
 			}, nil
 		}
-		return events.APIGatewayProxyResponse{
+		return events.APIGatewayV2HTTPResponse{
 			StatusCode:        200,
 			Headers:           map[string]string{},
 			MultiValueHeaders: map[string][]string{},
@@ -42,9 +42,9 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 		}, nil
 	}
 
-	if request.HTTPMethod == "POST" {
+	if request.RequestContext.HTTP.Method == "POST" {
 		if len(request.Body) == 0 {
-			return events.APIGatewayProxyResponse{
+			return events.APIGatewayV2HTTPResponse{
 				StatusCode:        400,
 				Headers:           map[string]string{},
 				MultiValueHeaders: map[string][]string{},
@@ -53,10 +53,17 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 			}, nil
 		}
 		compiledMarkdown = compileMarkdown(request.Body)
-		return events.APIGatewayProxyResponse{StatusCode: 200, Body: compiledMarkdown}, nil
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode:        200,
+			Headers:           map[string]string{},
+			MultiValueHeaders: map[string][]string{},
+			Body:              compiledMarkdown,
+			IsBase64Encoded:   false,
+			Cookies:           []string{},
+		}, nil
 	}
 
-	return events.APIGatewayProxyResponse{
+	return events.APIGatewayV2HTTPResponse{
 		StatusCode:        400,
 		Headers:           map[string]string{},
 		MultiValueHeaders: map[string][]string{},
