@@ -14,3 +14,4 @@ test-file.md
 aws-lambda.json
 aws-out.*
 template.yml
+.scratch

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -32,7 +33,21 @@ func handleRequest(
 		if len(request.Body) == 0 {
 			return events.APIGatewayV2HTTPResponse{StatusCode: 400, Body: "Need body in 'POST' request"}, nil
 		}
-		compiledMarkdown = compileMarkdown(request.Body)
+
+		var body struct {
+			Content string `json:"content"`
+			Options struct {
+				ReturnType      string `json:"return_type"`
+				Font            bool   `json:"font"`
+				SyntaxHighlight bool   `json:"syntax_highlight"`
+			} `json:"options"`
+		}
+		err := json.Unmarshal([]byte(request.Body), &body)
+
+		if err != nil {
+			return events.APIGatewayV2HTTPResponse{StatusCode: 400, Body: "Invalid JSON"}, nil
+		}
+		compiledMarkdown = compileMarkdown(body.Content) // TODO: handle options
 		return events.APIGatewayV2HTTPResponse{StatusCode: 200, Body: compiledMarkdown}, nil
 
 	default:
