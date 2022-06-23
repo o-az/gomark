@@ -21,7 +21,7 @@ func writeFile(filepath string, content string) {
 		log.Fatalf("unable to wrote file: %v", err)
 	}
 	defer file.Close()
-	_, err2 := file.WriteString("<html>" + content + "</html>")
+	_, err2 := file.WriteString(content)
 
 	if err2 != nil {
 		log.Fatalf("unable to wrote file: %v", err)

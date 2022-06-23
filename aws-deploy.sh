@@ -1,4 +1,4 @@
-go mod tidy
+go fmt *.go && go mod tidy
 
 rm -rf main.zip main
 
